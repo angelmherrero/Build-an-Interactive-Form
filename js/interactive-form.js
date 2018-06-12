@@ -383,31 +383,16 @@ $("button").on('click', (e) => {
 	}		
 });	
 
-
- function msgandborderenabled(input1, input2) {
-	$("button").disabled = false;
-	$("input2").hide();
-    $("input1").css("border-color", "#5e97b0");
-    $("input1").css("border-width", "thin");
-} 
-
-$("input#name").on('change', (e) => {
-	if($("input#name").val() !="") {
-		msgandborderenabled('input#name', 'p.missname');
-	}	
-});
-
-
 /*Chapter on type corrections and elimination of warning messages of all kinds*/
 /* Name correction and elimination of empty name field message and bold red border */
-//$("input#name").on('change', (e) => {
-//	if($("input#name").val() !="") {
-//		$("button").disabled = false;
-//		$("p.missname").hide();
-//		$("input#name").css("border-color","#5e97b0");
-//		$("input#name").css("border-width", "thin");   
-//	}	
-//});
+$("input#name").on('change', (e) => {
+	if($("input#name").val() !="") {
+		$("button").disabled = false;
+		$("p.missname").hide();
+		$("input#name").css("border-color","#5e97b0");
+		$("input#name").css("border-width", "thin");   
+	}	
+});
 
 /* Email correction and elimination of conditional messages and bold red border */
 $("input#mail").on('change', (e) => {
