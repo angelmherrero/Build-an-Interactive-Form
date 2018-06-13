@@ -41,6 +41,7 @@ form {
 	background: #85b5ca;
 }
 
+#other-title,
 h2  {
 	padding: 0;
 	border: none;
@@ -223,5 +224,14 @@ button:hover {
 	font-weight: bold;
 	font-size: 1em;
 	padding-top: 0;
+	width: 90%;	
+}
+
+.unobs{
+	color: red;
+	font-weight: bold;
+	font-size: 1.5em;
+	padding-top: 0;
+	padding-left: 30px;
 	width: 90%;	
 }

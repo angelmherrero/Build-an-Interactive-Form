@@ -1,7 +1,11 @@
 //positioning the cursor in the text area when the program is launched
 document.querySelector("label[for='name']").focus();
 
-//creating a textarea when choosing the option "other" in the Job Role dropdown list
+/*creating a textarea when choosing the option "other" in the Job Role dropdown list
+  having eliminated the two html lines that created the textarea for unobstrusive 
+  JavaScript purposes*/
+$("div.unobs").remove();
+
 $("#title").on('change', (e) => {
 	let x = $("#title option:selected").text();
 	if ( x === "Other") {
@@ -380,7 +384,14 @@ $("button").on('click', (e) => {
 	/* we'll take you to Coinbase's site to set up your billing information, when you click “Register” */	
 	} else if ($("#payment option:selected").text() === "Bitcoin") {
 		window.open('http://www.coinbase.com','_blank');
-	}		
+	} 
+	let finalmessage = "";
+	console.log(finalmessage);
+	finalmessage = "All OK";
+	console.log(finalmessage);
+	if (finalmessage === "All OK") {
+		$("button").after("<span class='unobs'>    The form has succesfully been submitted!</span>");
+	}
 });	
 
 /*Chapter on type corrections and elimination of warning messages of all kinds*/
