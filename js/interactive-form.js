@@ -9,7 +9,7 @@ document.querySelector("label[for='name']").focus();
 $("#title").on('change', (e) => {
 	let x = $("#title option:selected").text();
 	if ( x === "Other") {
-		$("fieldset.shirt").before("<h class='other-title'>Please describe Your Job Role</h2>");
+		$("fieldset.shirt").before("<h2 class='other-title'>Please describe Your Job Role</h2>");
 		$("fieldset.shirt").before("<textarea class='other-title' id='other-title' placeholder='Your Job Role'></textarea>");
 	} else {
 		$(".other-title").remove();
@@ -293,11 +293,7 @@ $("input#mail").on('keyup', (e) => {
 		$("p.missemail").remove(); 
 	});	
 });
-function remSuccMess() {
-	$("div.unobs").remove();
-	$(".other-title").remove();
-	return;
-}
+
 /* Defining all the conditions that will prevent from submitting the form and defining warning
    messages and red bold border fields when inadequate content  */
 $("button").on('click', (e) => {
@@ -420,9 +416,16 @@ $("button").on('click', (e) => {
 	if (finalmessage === "All OK") {
 		console.log ("All OK");
 		$("button").after("<span class='unobs'>    The form has succesfully been submitted!</span>");
-		document.setTimeout(remSuccMess(),200);
 		$("form")[0].reset();
 		document.querySelector("label[for='name']").focus();
+		$(".unobs").remove();
+		$(".totalbill").remove();
+		$(".other-title").remove();
+		$(".finalbill").remove();
+		for (j=1; j<= courseNumber; j +=1) {
+			document.querySelectorAll(".activities label input")[j].disabled = true;
+			document.querySelectorAll(".activities label")[j].className = "ungraying";
+		};	
 	};
 });	
 
