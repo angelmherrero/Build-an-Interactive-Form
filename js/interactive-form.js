@@ -1,17 +1,19 @@
+$(".unobs").remove();
+
 //positioning the cursor in the text area when the program is launched
 document.querySelector("label[for='name']").focus();
 
 /*creating a textarea when choosing the option "other" in the Job Role dropdown list
   having eliminated the two html lines that created the textarea for unobstrusive 
   JavaScript purposes*/
-$("div.unobs").remove();
-
 $("#title").on('change', (e) => {
 	let x = $("#title option:selected").text();
 	if ( x === "Other") {
-		$("fieldset.shirt").before("<h2>Please describe Your Job Role</h2>");
-		$("fieldset.shirt").before("<textarea id='other-title' placeholder='Your Job Role'></textarea>");
-	};
+		$("fieldset.shirt").before("<h class='other-title'>Please describe Your Job Role</h2>");
+		$("fieldset.shirt").before("<textarea class='other-title' id='other-title' placeholder='Your Job Role'></textarea>");
+	} else {
+		$(".other-title").remove();
+	}	
 });
 
 /*Creating an array of objects "stockRef". 
@@ -279,18 +281,23 @@ $("#payment").on('click', (e) => {
 /* Checking if an email address just after typing it
    The check looks for an acceptable email format: contains "@", contains a "." four 
    places from the end, there are symbols before the "@"  */
-$("input#mail").on('type', (e) => {
+$("input#mail").on('keyup', (e) => {
 	let eaddress = $("input#mail").val().length;
 	let ampersand = $("input#mail").val().search("@");
 	let point = $("input#mail").val().indexOf(".");
 	if (ampersand === "-1" || ampersand < 1 || point !== (eaddress -4) || ampersand === point) {
 	/* showing a message indicating that the email address is not correct  */	
-		$("input#mail").after("<p class='missemail'>The form will not be submitted without a valid email address</p>");
-		$("input#mail").css("border-color","red");
-		$("input#mail").css("border-width", "thick");
-	}	
+		$("input#mail").after("<p class='missemail'>The form will not be submitted without a valid email address</p>");	
+	}
+	$("input#mail").on('keydown', (e) => {
+		$("p.missemail").remove(); 
+	});	
 });
-
+function remSuccMess() {
+	$("div.unobs").remove();
+	$(".other-title").remove();
+	return;
+}
 /* Defining all the conditions that will prevent from submitting the form and defining warning
    messages and red bold border fields when inadequate content  */
 $("button").on('click', (e) => {
@@ -299,36 +306,46 @@ $("button").on('click', (e) => {
 	let eaddress = $("input#mail").val().length;
 	let ampersand = $("input#mail").val().search("@");
 	let point = $("input#mail").val().indexOf(".");
+	let inhibitor = 0;
 	/* Name field empty: message and red bold border is created  */
 	if($("input#name").val() ==="") {
+		inhibitor = 0;
 		$("button").disabled = true;
 		$("input#name").after("<p class='missname'>The form will not be submitted without a Name</p>");
 		$("input#name").css("border-color","red");
 		$("input#name").css("border-width", "thick");
 		$("label[for='name']").focus();
+		inhibitor = 1;
 	/* Email field empty: message and red bold border is created */	
 	} else if ($("input#mail").val() ==="") {		
+		inhibitor = 0;
 		$("button").disabled = true;
 		$("input#mail").after("<p class='missemail'>The form will not be submitted without a valid email address</p>");
 		$("input#mail").css("border-color","red");
 		$("input#mail").css("border-width", "thick");
 		$("label[for='mail']").focus();
+		inhibitor = 1;
 	/* Email address is not correct: missing elements in its format: conditional messages and 
 	   red bold border are created */	
 	} else if (ampersand === "-1" || ampersand < 1 || point !== (eaddress -4) || ampersand === point) {
+		inhibitor = 0;
 		$("button").disabled = true;
 		$("input#mail").after("<p class='missemail'>The form will not be submitted without a valid email address</p>");
 		$("input#mail").css("border-color","red");
 		$("input#mail").css("border-width", "thick");
+		inhibitor = 1;
 	/* No courses selected (= no cost) */
 	} else if (finalBill === "$0"){
+		inhibitor = 0;
 		$("button").disabled = true;
 		$(".activities").append("<p class='noactivity'>The form will not be submitted without choosing courses</p>");
+		inhibitor = 1;
 	/* Missing elements in the credit card information: : conditional message are created */
 	} else if ($("#payment option:selected").text() === "Credit Card") {	
 	/* Credit card number field is empty or credit card has inadequate number*/
 		/* Credit card number has less than 13 numbers */
 		if ($("input#cc-num").val().length<13) {
+			inhibitor = 0;
 			$("button").disabled = true;
 			/* Red bold border is created */
 			$("input#cc-num").css("border-color","red");
@@ -337,20 +354,25 @@ $("button").on('click', (e) => {
 			/* Credit card number field is empty. Condiitonal message for need to provide number*/
 			if($("input#cc-num").val() === "") {
 				$("input#cc-num").after("<p class='wrongcard'>The form will not be submitted, card number field is empty</p>");	
+				inhibitor = 1;
 			} else {
 			/* Credit card number has wrong number. Conditional message for wrong number */	
 				$("input#cc-num").after("<p class='wrongcard'>The form will not be submitted, card number must have between 13 and 16 numbers</p>");
+				inhibitor = 1;
 			}
 		/* Credit card number has more than 16 numbers. Conditional message for wrong number*/			
 		} else if ($("input#cc-num").val().length>16) {
+			inhibitor = 0;
 			$("button").disabled = true;	
 			/* Red bold border is created */	
 			$("input#cc-num").css("border-color","red");
 			$("input#cc-num").css("border-width", "thick");
 			/* Conditional message for wrong number*/
 			$("input#cc-num").after("<p class='wrongcard'>The form will not be submitted, card number must have between 13 and 16 numbers</p>");
+			inhibitor = 1;
 	/* Credit card zip field is empty or has an inadequate number*/	
 		} else if ($("input#zip").val().length != 5) {
+			inhibitor = 0;
 			$("button").disabled = true;
 			/* Red bold border is created */		
 			$("input#zip").css("border-color","red");
@@ -358,13 +380,16 @@ $("button").on('click', (e) => {
 			/* Credit card zip field is empty. Condiitonal message for need to provide zip*/
 			if($("input#zip").val() === "") {
 				$("input#cc-num").after("<p class='wrongzip'>The form will not be submitted, zip field is empty</p>");
+				inhibitor = 1;
 			} else {
 			/* Credit card zip field has wrong number. Conditional message for wrong zip */	
 				$("p.wrongzip").hide();
 				$("input#cc-num").after("<p class='wrongzip'>The form will not be submitted, zip must have 5 numbers</p>");
+				inhibitor = 1;
 			}	
 		/* Credit card cvv field is empty or has an inadequate number*/	
 		} else if ($("input#cvv").val().length != 3) {
+			inhibitor = 0;
 			$("button").disabled = true;	
 			/* Red bold border is created */
 			$("input#cvv").css("border-color","red");
@@ -372,10 +397,12 @@ $("button").on('click', (e) => {
 			/* Credit card cvv field is empty. Condiitonal message for need to provide cvv*/
 			if($("input#cvv").val() === "") {
 				$("input#cc-num").after("<p class='wrongcvv'>The form will not be submitted, cvv field is empty</p>");
+				inhibitor = 1;
 			} else {
 			/* Credit card cvv field has wrong number. Conditional message for wrong cvv */	
 				$("p.wrongcvv").hide();
 				$("input#cc-num").after("<p class='wrongcvv'>The form will not be submitted, cvv must have 3 numbers</p>");
+				inhibitor = 1;
 			}
 		}	
 	/* we'll take you to Paypal's site to set up your billing information, when you click “Register”*/		
@@ -386,12 +413,17 @@ $("button").on('click', (e) => {
 		window.open('http://www.coinbase.com','_blank');
 	} 
 	let finalmessage = "";
-	console.log(finalmessage);
-	finalmessage = "All OK";
-	console.log(finalmessage);
+	if (inhibitor != 1) {
+		finalmessage = "All OK";
+	};	
+//	$("span.unobs").remove();
 	if (finalmessage === "All OK") {
+		console.log ("All OK");
 		$("button").after("<span class='unobs'>    The form has succesfully been submitted!</span>");
-	}
+		document.setTimeout(remSuccMess(),200);
+		$("form")[0].reset();
+		document.querySelector("label[for='name']").focus();
+	};
 });	
 
 /*Chapter on type corrections and elimination of warning messages of all kinds*/
